@@ -1,3 +1,4 @@
+md bin
 del bin\*.*
 copy ..\Regulus.Project.Chat.Game\bin\Debug\*.* bin\*.*
 copy ..\Regulus\Tool\Server\bin\debug\*.* bin\*.*
