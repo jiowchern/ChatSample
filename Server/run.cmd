@@ -1,5 +1,6 @@
 md bin
-del bin\*.*
+del bin\*.* /Y
+
 copy ..\Regulus.Project.Chat.Game\bin\Debug\*.* bin\*.*
 copy ..\Regulus\Tool\Server\bin\debug\*.* bin\*.*
 copy ..\Regulus\Tool\GhostProviderGenerator\bin\debug\*.* bin\*.*
