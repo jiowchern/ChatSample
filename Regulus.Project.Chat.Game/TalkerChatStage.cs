@@ -6,9 +6,9 @@ using Regulus.Utility;
 
 namespace Regulus.Project.Chat.Game
 {
-    internal class TalkerChatStage : IStage , Common.ITalker
+    internal class TalkerChatStage : IStage , Common.IPlayer , INotifiable  , Common.ITalker
     {
-        private readonly ISoulBinder _SoulBinder;
+        private readonly ISoulBinder _SoulBinder;   
 
         private readonly Room _Room;
 
@@ -25,14 +25,14 @@ namespace Regulus.Project.Chat.Game
 
         void IStage.Enter()
         {            
-            _SoulBinder.Bind<ITalker>(this);
-            _Room.MessageEvent += _MessageEvent;
+            _SoulBinder.Bind<IPlayer>(this);
+            _Room.Join(this);
         }
 
         void IStage.Leave()
         {
-            _Room.MessageEvent -= _MessageEvent;
-            _SoulBinder.Unbind<ITalker>(this);
+            _Room.Leave(this);
+            _SoulBinder.Unbind<IPlayer>(this);
         }
 
         void IStage.Update()
@@ -40,23 +40,41 @@ namespace Regulus.Project.Chat.Game
             
         }
 
-        private event Action<string, string> _MessageEvent;
-        event Action<string, string> ITalker.MessageEvent
-        {
-            add { _MessageEvent += value; }
-            remove { _MessageEvent -= value; }
-        }
 
-        Regulus.Remoting.Value<bool> ITalker.Talk(string message)
+        Regulus.Remoting.Value<bool> IPlayer.Talk(string message)
         {
-            _Room.Talk(_Name , message);
-
+            _MessageEvent(message);
             return true;
         }
 
         public void Exit()
         {
             DoneEvent();
+        }
+
+        void INotifiable.Enter(INotifiable other)
+        {
+            _SoulBinder.Bind<ITalker>(other);
+        }
+
+        void INotifiable.Leave(INotifiable other)
+        {
+            _SoulBinder.Unbind<ITalker>(other);
+        }
+
+        
+
+        private event Action<string> _MessageEvent;
+        event Action<string> ITalker.MessageEvent
+        {
+            add { _MessageEvent += value; }
+            remove { _MessageEvent -= value; }
+        }
+
+        
+        string ITalker.Name
+        {
+            get { return _Name; }
         }
     }
 }

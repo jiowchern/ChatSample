@@ -5,9 +5,10 @@ using System.Text;
 
 namespace Regulus.Project.Chat.Common
 {
-    public interface ITalker
-    {
-        string Name { get; }
-        event Action<string> MessageEvent;
+    public interface IPlayer
+    {        
+        Regulus.Remoting.Value<bool> Talk(string message);
+
+        void Exit();
     }
 }
