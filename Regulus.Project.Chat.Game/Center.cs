@@ -19,23 +19,23 @@ namespace Regulus.Project.Chat.Game
             _Talkers = new Updater();
             _Room = new Room();
         }
-        void IBootable.Launch()
+        void ICore.Launch(IProtocol protocol, ICommand command)
         {
             
         }
 
-        void IBootable.Shutdown()
+        void ICore.Shutdown()
         {
             _Talkers.Shutdown();
         }
 
-        bool IUpdatable.Update()
+        bool ICore.Update()
         {
             _Talkers.Working();
             return true;
         }
 
-        void ICore.AssignBinder(ISoulBinder binder)
+        void IBinderProvider.AssignBinder(ISoulBinder binder)
         {
             _Talkers.Add(new Talker(binder , _Room));
         }
